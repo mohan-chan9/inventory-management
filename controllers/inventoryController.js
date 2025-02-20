@@ -153,7 +153,7 @@ const generateInventoryReport = async (req, res) => {
 const generateStockReport = async (req, res) => {
   try {
     const filters = {
-      threshold: req.query.threshold || 10,  // Default threshold
+      threshold: req.query.threshold || null,
       category: req.query.category || null,
       subcategory: req.query.subcategory || null,
     };
@@ -163,6 +163,7 @@ const generateStockReport = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
 
 module.exports = {
   addInventoryItem,

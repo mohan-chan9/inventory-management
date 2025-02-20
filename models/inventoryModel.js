@@ -186,23 +186,29 @@ const generateStockReport = async (filters) => {
     JOIN products p ON i.product_id = p.id
     JOIN subcategories s ON p.subcategory_id = s.id
     JOIN categories c ON s.category_id = c.id
-    WHERE i.quantity <= $1
+    WHERE 1=1
   `;
-  const values = [filters.threshold || 10]; // Default threshold for low stock is 10
-  let index = 2;
+  const values = [];
+  let index = 1;
 
+  if (filters.threshold) {
+    query += ` AND i.quantity <= $${index++}`;
+    values.push(filters.threshold);
+  }
   if (filters.category) {
     query += ` AND c.category_name = $${index++}`;
     values.push(filters.category);
   }
   if (filters.subcategory) {
-    query += ` AND s.subcategory_name = $${index}`;
+    query += ` AND s.subcategory_name = $${index++}`;
     values.push(filters.subcategory);
   }
-  
+
   const { rows } = await pool.query(query, values);
   return rows;
 };
+
+
 
 
 
